@@ -1,0 +1,12 @@
+{
+  "build": {
+    "skip": true
+  },
+  "hooks": {
+    "prebuild": {
+      "commands": [
+        "./sbt -DdockerImageUrl=$IMAGE_URL docker:publish"
+      ]
+    }
+  }
+}

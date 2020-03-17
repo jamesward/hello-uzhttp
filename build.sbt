@@ -25,3 +25,17 @@ daemonUser in Docker := "root"
 dockerPermissionStrategy := DockerPermissionStrategy.None
 dockerEntrypoint := Seq("java", "-jar",s"/opt/docker/lib/${(artifactPath in packageJavaLauncherJar).value.getName}")
 dockerCmd :=  Seq.empty
+
+val maybeDockerSettings = sys.props.get("dockerImageUrl").flatMap { imageUrl =>
+  val parts = imageUrl.split("/")
+  if (parts.size == 3) {
+    Some((parts(0), parts(1), parts(3)))
+  }
+  else {
+    None
+  }
+}
+
+dockerRepository := maybeDockerSettings.map(_._1)
+dockerUsername := maybeDockerSettings.map(_._2)
+packageName in Docker := maybeDockerSettings.map(_._3).getOrElse(name.value)
