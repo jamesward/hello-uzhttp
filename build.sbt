@@ -1,4 +1,4 @@
-import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
+import com.typesafe.sbt.packager.docker.DockerPermissionStrategy
 
 enablePlugins(GitVersioning, LauncherJarPlugin, DockerPlugin)
 
@@ -22,16 +22,10 @@ testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
 
 Global / cancelable := false
 
-dockerBaseImage := "gcr.io/distroless/java:8"
-
 dockerUpdateLatest := true
-
-dockerAutoremoveMultiStageIntermediateImages := false
-
-dockerCommands := Seq(
-  Cmd("FROM", "gcr.io/distroless/java:8"),
-  Cmd("WORKDIR", "/opt/docker"),
-  Cmd("COPY", "1/opt", "/opt"),
-  Cmd("COPY", "2/opt", "/opt"),
-  ExecCmd("CMD", s"/opt/docker/lib/${(artifactPath in packageJavaLauncherJar).value.getName}")
-)
+dockerBaseImage := "gcr.io/distroless/java:11"
+daemonUserUid in Docker := None
+daemonUser in Docker := "root"
+dockerPermissionStrategy := DockerPermissionStrategy.None
+dockerEntrypoint := Seq("java", "-jar")
+dockerCmd :=  Seq(s"/opt/docker/lib/${(artifactPath in packageJavaLauncherJar).value.getName}")
