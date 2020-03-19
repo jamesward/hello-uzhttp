@@ -27,5 +27,5 @@ dockerBaseImage := "gcr.io/distroless/java:11"
 daemonUserUid in Docker := None
 daemonUser in Docker := "root"
 dockerPermissionStrategy := DockerPermissionStrategy.None
-dockerEntrypoint := Seq("java", "-jar")
-dockerCmd :=  Seq(s"/opt/docker/lib/${(artifactPath in packageJavaLauncherJar).value.getName}")
+dockerEntrypoint := Seq("java", "-jar",s"/opt/docker/lib/${(artifactPath in packageJavaLauncherJar).value.getName}")
+dockerCmd :=  Seq.empty
