@@ -6,16 +6,12 @@ name := "hello-uzhttp"
 
 scalaVersion := "2.13.1"
 
-lazy val uzhttp = RootProject(uri("https://github.com/jamesward/uzhttp.git"))
-
-lazy val root = (project in file(".")).dependsOn(uzhttp)
-
-// todo: use same version as uzhttp?
 val zioVersion = "1.0.0-RC18-2"
 
 libraryDependencies ++= Seq(
-  "dev.zio" %% "zio-test"          % zioVersion % "test",
-  "dev.zio" %% "zio-test-sbt"      % zioVersion % "test",
+  "org.polynote" %% "uzhttp"       % "0.1.2",
+
+  "dev.zio"      %% "zio-test-sbt" % zioVersion % "test",
 )
 
 testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
