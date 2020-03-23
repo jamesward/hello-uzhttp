@@ -5,7 +5,7 @@
   "hooks": {
     "prebuild": {
       "commands": [
-        "./sbt -DdockerImageUrl=$IMAGE_URL docker:publish"
+        "./sbt -DdockerImageUrl=$IMAGE_URL docker:publishLocal"
       ]
     }
   }
