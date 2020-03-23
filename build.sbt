@@ -29,7 +29,7 @@ dockerCmd :=  Seq.empty
 val maybeDockerSettings = sys.props.get("dockerImageUrl").flatMap { imageUrl =>
   val parts = imageUrl.split("/")
   if (parts.size == 3) {
-    Some((parts(0), parts(1), parts(3)))
+    Some((parts(0), parts(1), parts(2)))
   }
   else {
     None
