@@ -1,6 +1,6 @@
 import com.typesafe.sbt.packager.docker.DockerPermissionStrategy
 
-enablePlugins(GitVersioning, LauncherJarPlugin, DockerPlugin)
+enablePlugins(GitVersioning, GraalVMNativeImagePlugin)
 
 name := "hello-uzhttp"
 
@@ -29,24 +29,35 @@ testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
 
 Global / cancelable := false
 
-dockerUpdateLatest := true
-dockerBaseImage := "gcr.io/distroless/java:11"
-daemonUserUid in Docker := None
-daemonUser in Docker := "root"
-dockerPermissionStrategy := DockerPermissionStrategy.None
-dockerEntrypoint := Seq("java", "-jar",s"/opt/docker/lib/${(artifactPath in packageJavaLauncherJar).value.getName}")
-dockerCmd :=  Seq.empty
+javacOptions ++= Seq("-source", "11", "-target", "11")
 
-val maybeDockerSettings = sys.props.get("dockerImageUrl").flatMap { imageUrl =>
-  val parts = imageUrl.split("/")
-  if (parts.size == 3) {
-    Some((parts(0), parts(1), parts(2)))
-  }
-  else {
-    None
-  }
+scalacOptions += "-target:jvm-11"
+
+initialize := {
+  val _ = initialize.value
+  val javaVersion = sys.props("java.specification.version")
+  if (javaVersion != "11")
+    sys.error("Java 11 is required for this project. Found " + javaVersion + " instead")
 }
 
-dockerRepository := maybeDockerSettings.map(_._1)
-dockerUsername := maybeDockerSettings.map(_._2)
-packageName in Docker := maybeDockerSettings.map(_._3).getOrElse(name.value)
+publishArtifact in (Compile, packageDoc) := false
+
+publishArtifact in packageDoc := false
+
+sources in (Compile,doc) := Seq.empty
+
+// if this is specified, graalvm runs inside docker, otherwise it uses an PATH'd native-image
+//graalVMNativeImageGraalVersion := Some("20.0.0-java11")
+
+graalVMNativeImageOptions ++= Seq(
+  "--verbose",
+  "--no-server",
+  "--no-fallback",
+  "--static",
+  "--report-unsupported-elements-at-runtime",
+  "-H:+ReportExceptionStackTraces",
+  "-H:+ReportUnsupportedElementsAtRuntime",
+  "-H:+TraceClassInitialization",
+  "-H:+PrintClassInitialization",
+  "--initialize-at-build-time=scala.runtime.Statics$VM",
+)
