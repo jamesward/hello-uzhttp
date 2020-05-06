@@ -59,5 +59,6 @@ graalVMNativeImageOptions ++= Seq(
   "-H:+ReportUnsupportedElementsAtRuntime",
   "-H:+TraceClassInitialization",
   "-H:+PrintClassInitialization",
+  "-H:UseMuslC=../../bundle/",
   "--initialize-at-build-time=scala.runtime.Statics$VM",
 )

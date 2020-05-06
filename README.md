@@ -17,7 +17,7 @@ Run the Native Image:
 target/graalvm-native-image/hello-uzhttp
 ```
 
-Containerize Locally:
+Containerize Locally as a GraalVM native image:
 ```
 docker build -t hello-uzhttp .
 ```
