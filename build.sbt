@@ -4,15 +4,26 @@ enablePlugins(GitVersioning, LauncherJarPlugin, DockerPlugin)
 
 name := "hello-uzhttp"
 
-scalaVersion := "2.13.1"
+scalaVersion := "2.13.2"
 
-val zioVersion = "1.0.0-RC18-2"
+val zioVersion = "1.0.0-RC19-2"
 
 libraryDependencies ++= Seq(
-  "org.polynote" %% "uzhttp"       % "0.1.3",
+  "org.polynote" %% "uzhttp"       % "0.2.0",
 
   "dev.zio"      %% "zio-test-sbt" % zioVersion % "test",
 )
+
+scalacOptions ++= Seq(
+  "-unchecked",
+  "-deprecation",
+  "-explaintypes",
+  "-feature",
+  "-Wconf:any:error",
+  "-Wunused",
+  "-Wvalue-discard",
+)
+
 
 testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
 
