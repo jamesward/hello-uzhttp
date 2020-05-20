@@ -54,6 +54,7 @@ graalVMNativeImageOptions ++= Seq(
   "--no-server",
   "--no-fallback",
   "--static",
+  "--install-exit-handlers",
   "-H:+ReportExceptionStackTraces",
   "-H:+TraceClassInitialization",
   "-H:+PrintClassInitialization",
