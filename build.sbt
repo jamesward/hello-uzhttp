@@ -59,5 +59,6 @@ graalVMNativeImageOptions ++= Seq(
   "-H:+TraceClassInitialization",
   "-H:+PrintClassInitialization",
   "-H:UseMuslC=../../bundle/",
+  "-H:+RemoveSaturatedTypeFlows",
   "--initialize-at-build-time=scala.runtime.Statics$VM",
 )
