@@ -6,10 +6,10 @@ name := "hello-uzhttp"
 
 scalaVersion := "2.13.2"
 
-val zioVersion = "1.0.0-RC19-2"
+val zioVersion = "1.0.0-RC21"
 
 libraryDependencies ++= Seq(
-  "org.polynote" %% "uzhttp"       % "0.2.0",
+  "org.polynote" %% "uzhttp"       % "0.2.4",
 
   "dev.zio"      %% "zio-test-sbt" % zioVersion % "test",
 )

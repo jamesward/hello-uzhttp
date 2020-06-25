@@ -40,7 +40,7 @@ object WebApp extends App {
     }
   }
 
-  override def run(args:  List[String]): ZIO[zio.ZEnv, Nothing, Int] = {
+  override def run(args:  List[String]): ZIO[zio.ZEnv, Nothing, zio.ExitCode] = {
 
     def server(port: Char): ZIO[Blocking with Clock, Throwable, Nothing] = {
       Server.builder(new InetSocketAddress(port)).handleAll { _ =>
@@ -48,20 +48,15 @@ object WebApp extends App {
       }.serve.useForever
     }
 
-    {
-      for {
-        port <- zioPort.mapError {
-          case InvalidPortValue(s) => new Error(s"The specified PORT '$s' was invalid")
-          case SecurityError(e) => e
-        }
-        server <- server(port)
-      } yield server
-    }.fold(t => {
-      // not in zio because we are dying
-      // but maybe it'd be nice to tapError
-      t.printStackTrace()
-      1
-    }, _ => 0)
+    val appLogic = for {
+      port <- zioPort.mapError {
+        case InvalidPortValue(s) => new Error(s"The specified PORT '$s' was invalid")
+        case SecurityError(e) => e
+      }
+      _ <- server(port)
+    } yield ()
+
+    appLogic.exitCode
   }
 
 }
