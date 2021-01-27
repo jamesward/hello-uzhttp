@@ -4,14 +4,14 @@ enablePlugins(GitVersioning, LauncherJarPlugin, DockerPlugin)
 
 name := "hello-uzhttp"
 
-scalaVersion := "2.13.2"
+scalaVersion := "2.13.4"
 
-val zioVersion = "1.0.0-RC21"
+val zioVersion = "1.0.2"
 
 libraryDependencies ++= Seq(
-  "org.polynote" %% "uzhttp"       % "0.2.4",
+  "org.polynote" %% "uzhttp"       % "0.2.6",
 
-  "dev.zio"      %% "zio-test-sbt" % zioVersion % "test",
+  "dev.zio"      %% "zio-test-sbt" % zioVersion % Test,
 )
 
 scalacOptions ++= Seq(
