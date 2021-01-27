@@ -1,5 +1,3 @@
-import com.typesafe.sbt.packager.docker.DockerPermissionStrategy
-
 enablePlugins(GitVersioning, GraalVMNativeImagePlugin)
 
 name := "hello-uzhttp"
@@ -9,9 +7,11 @@ scalaVersion := "2.13.4"
 val zioVersion = "1.0.2"
 
 libraryDependencies ++= Seq(
-  "org.polynote" %% "uzhttp"       % "0.2.6",
+  "org.polynote"  %% "uzhttp"       % "0.2.6",
 
-  "dev.zio"      %% "zio-test-sbt" % zioVersion % Test,
+  "org.scalameta" %% "svm-subs"     % "20.2.0",
+
+  "dev.zio"       %% "zio-test-sbt" % zioVersion % Test,
 )
 
 scalacOptions ++= Seq(
@@ -42,9 +42,7 @@ initialize := {
 
 publishArtifact in (Compile, packageDoc) := false
 
-publishArtifact in packageDoc := false
-
-sources in (Compile,doc) := Seq.empty
+sources in (Compile, doc) := Seq.empty
 
 // if this is specified, graalvm runs inside docker, otherwise it uses an PATH'd native-image
 //graalVMNativeImageGraalVersion := Some("20.0.0-java11")
@@ -55,10 +53,7 @@ graalVMNativeImageOptions ++= Seq(
   "--no-fallback",
   "--static",
   "--install-exit-handlers",
+  "--libc=musl",
   "-H:+ReportExceptionStackTraces",
-  "-H:+TraceClassInitialization",
-  "-H:+PrintClassInitialization",
-  "-H:UseMuslC=../../bundle/",
   "-H:+RemoveSaturatedTypeFlows",
-  "--initialize-at-build-time=scala.runtime.Statics$VM",
 )
