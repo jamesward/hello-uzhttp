@@ -1,7 +1,10 @@
 steps:
-  - name: adoptopenjdk/openjdk8
+  - name: gcr.io/distroless/java:8-debug
     entrypoint: '/workspace/sbt'
-    args: ['-DdockerImageUrl=gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA', 'docker:publishLocal']
+    args: ['docker:stage']
+
+  - name: gcr.io/cloud-builders/docker
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA', '/workspace/target/docker/stage']
 
   - name: gcr.io/cloud-builders/docker
     args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA']
