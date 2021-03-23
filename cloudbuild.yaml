@@ -1,0 +1,24 @@
+steps:
+  - name: adoptopenjdk/openjdk8
+    entrypoint: '/workspace/sbt'
+    args: ['-DdockerImageUrl=gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA', 'docker:publishLocal']
+
+  - name: gcr.io/cloud-builders/docker
+    args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA']
+
+  - name: gcr.io/cloud-builders/docker
+    args: ['tag', 'gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA', 'gcr.io/$PROJECT_ID/$REPO_NAME:latest']
+
+  - name: gcr.io/cloud-builders/docker
+    args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME:latest']
+
+  - name: ghcr.io/jamesward/easycloudrun
+    entrypoint: deploy
+    env:
+      - 'PROJECT_ID=$PROJECT_ID'
+      - 'BUILD_ID=$BUILD_ID'
+      - 'COMMIT_SHA=$COMMIT_SHA'
+      - 'IMAGE_NAME=$REPO_NAME'
+      - 'IMAGE_VERSION=$COMMIT_SHA'
+      - 'REGION=us-central1'
+
